@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // url      = env("DATABASE_URL")
+  url      = "postgresql://root:shopperpassword@localhost:5432/shopper?schema=public"
+}
+
+model Client {
+  id           String        @id
+  measurements Measurement[]
+}
+
+model Measurement {
+  id String @id
+
+  client    Client @relation(fields: [client_id], references: [id])
+  client_id String
+
+  image_url     String
+  value         Int
+  datetime      DateTime
+  type          String
+  has_confirmed Boolean
+}
