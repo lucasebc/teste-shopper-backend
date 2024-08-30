@@ -3,8 +3,6 @@ import { Request, Response, NextFunction } from 'express';
 import { ListMeasurementDTO } from './client.dto';
 
 export function listMeasurementsValidation(req: Request, res: Response, next: NextFunction) {
-  console.log(`validacao...`);
-
   const measureType: string = req.query?.measure_type as string
 
   // validates if measure_type is 'gas' or 'water'

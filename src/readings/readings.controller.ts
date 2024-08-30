@@ -24,7 +24,7 @@ export class ReadingsController {
                 measure_uuid: result.id
             }
         }catch(e){
-            throw new HttpException(e, HttpStatus.BAD_REQUEST)
+            throw new HttpException('Ocorreu algum erro na requisição.', HttpStatus.BAD_REQUEST)
         }
         
     }

@@ -8,8 +8,6 @@ export class MeasurementNotFound implements NestMiddleware {
   constructor(private prisma: PrismaService){}
 
   async use(req: Request, res: Response, next: NextFunction) {
-    console.log(req.body.measure_uuid)
-
     const measurement: Measurement = await this.prisma.measurement.findFirst({
       where:{
         id: req.body.measure_uuid,
