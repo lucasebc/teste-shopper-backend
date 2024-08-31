@@ -5,7 +5,6 @@ import {
   HttpStatus,
   Patch,
   Post,
-  ValidationPipe,
 } from '@nestjs/common'
 import { UploadReadingDTO } from './dtos/uploadReading.dto'
 import { ConfirmReadingDTO } from './dtos/confirmReading.dto'
@@ -42,16 +41,13 @@ export class ReadingsController {
         measure_uuid: result.id,
       }
     } catch (e) {
-      throw new HttpException(
-        'Ocorreu algum erro na requisição.',
-        HttpStatus.BAD_REQUEST,
-      )
+      throw new HttpException(e, HttpStatus.BAD_REQUEST)
     }
   }
 
   @Patch('/confirm')
   async confirm(@Body() data: ConfirmReadingDTO): Promise<any> {
-    const result = await this.readingsService.confirm(data)
+    await this.readingsService.confirm(data)
 
     return { success: true }
   }

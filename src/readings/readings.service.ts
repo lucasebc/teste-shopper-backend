@@ -69,7 +69,8 @@ export class ReadingsService {
 
       fs.writeFileSync(`./${fileLocation}`, binaryData)
     } catch (e: any) {
-      throw new Error(e)
+      console.error(e)
+      throw new Error('Ocorreu um erro ao salvar imagem.')
     }
 
     return fileLocation
