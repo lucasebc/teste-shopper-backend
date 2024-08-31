@@ -1,34 +1,46 @@
 version: '3.8'
 
 services:
-  backend:
+  api:
     build:
-      context: .
       dockerfile: Dockerfile
-    ports:
-      - '3000:3000' # Assuming NestJS runs on port 3000
+      context: .
+      # Only will build development/production stage from our dockerfile
+      target: development
     volumes:
       - .:/usr/src/app
-    depends_on:
-      - db
-
-  db:
-    image: postgres:16
+    env_file:
+      - .env
     environment:
+      - DATABASE_URL=postgresql://root:shopperpassword@postgres:5432/shopper?schema=public
+    # Run a command against the development stage of the image
+    command: >
+      sh -c "
+      npx prisma migrate deploy &&
+      npm run start:dev
+      "
+    ports:
+      - 3000:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=shopper
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=shopperpassword
-      - POSTGRES_DB=shopper
-    volumes:
-      - ./docker/db/data:/var/lib/postgresql/data
-      - ./docker/db/sql:/docker-entrypoint-initdb.d
     ports:
-      - 5432:5432
-#   pgadmin:
-#     image: dpage/pgadmin4
-#     environment:
-#  - PGADMIN_DEFAULT_EMAIL=admin@admin.com
-#  - PGADMIN_DEFAULT_PASSWORD=password
-#     ports:
-#  - 5050:80
-#     depends_on:
-#  - db
+      - '5432:5432'
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 1s
+      timeout: 5s
+      retries: 15
+
+volumes:
+  db:
