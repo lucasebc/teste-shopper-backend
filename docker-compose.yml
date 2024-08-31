@@ -11,8 +11,8 @@ services:
       - .:/usr/src/app
     env_file:
       - .env
-    environment:
-      - DATABASE_URL=postgresql://root:shopperpassword@postgres:5432/shopper?schema=public
+    # environment:
+    # - DATABASE_URL=postgresql://root:shopperpassword@postgres:5432/shopper?schema=public
     # Run a command against the development stage of the image
     command: >
       sh -c "
